@@ -14,7 +14,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "users")
+@Table(name = "users",
+    uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"emailId", "password"})
+    }
+)
 public class User extends BaseModel {
 
     @Column(nullable = false)
