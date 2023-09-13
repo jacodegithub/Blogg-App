@@ -17,6 +17,7 @@ import lombok.Setter;
 @Table(name = "categories")
 public class Category extends BaseModel {
 
+    @Column(nullable = false)
     private String name;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

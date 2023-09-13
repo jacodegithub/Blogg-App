@@ -16,7 +16,8 @@ import lombok.Setter;
 @Entity
 @Table(name = "posts")
 public class Post extends BaseModel {
-    
+
+    @Column(nullable = false)
     private String name;
 
     @Column(columnDefinition = "TEXT")
