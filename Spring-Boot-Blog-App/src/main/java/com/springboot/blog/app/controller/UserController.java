@@ -28,8 +28,8 @@ public class UserController {
         return userService.getUsers();
     }
 
-    @PutMapping("/update-user")
-    public UserDto updateUser(@RequestBody UserDto dto, @PathVariable Long usrId) {
-        return userService.updateUser(dto, usrId);
+    @PutMapping("/update-user/{id}")
+    public UserDto updateUser(@RequestBody UserDto dto, @PathVariable("id") Long userId) {
+        return userService.updateUser(dto, userId);
     }
 }

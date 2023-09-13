@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
             user.setLastModifiedDate(new Date());
         }
 
-        user.setId(dto.getId());
+        // NEVER TRY TO UPDATE PRIMARY KEY
         user.setUserName(dto.getUserName());
         user.setEmailId(dto.getEmailId());
         user.setPassword(dto.getPassword());
