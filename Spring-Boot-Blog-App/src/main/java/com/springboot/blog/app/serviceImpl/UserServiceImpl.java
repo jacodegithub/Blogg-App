@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,14 +38,14 @@ public class UserServiceImpl implements UserService {
 
         User savedUser = userRepo.save(user);
 
-        UserDto dto = modelMapper.map(savedUser, UserDto.class);
+        UserDto dto = this.userToDto(savedUser);
         return dto;
     }
 
     @Override
     public List<UserDto> getUsers() {
         List<User> users = userRepo.findAll();
-        List<UserDto> userDto = users.stream().map(user -> modelMapper.map(user, UserDto.class)).collect(Collectors.toList());
+        List<UserDto> userDto = users.stream().map(user -> this.userToDto(user)).collect(Collectors.toList());
         return userDto;
     }
 
@@ -64,7 +65,27 @@ public class UserServiceImpl implements UserService {
 
         User updatedUser = userRepo.save(user);
 
-        return modelMapper.map(updatedUser, UserDto.class);
+        return this.userToDto(updatedUser);
     }
 
+
+    public UserDto getUserById(Long id) {
+        User user =  this.userRepo.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("user", id)
+        );
+
+        return this.userToDto(user);
+    }
+
+    public String deleteUser(Long id) {
+        User user = userRepo.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("user", id)
+        );
+        userRepo.deleteById(id);
+        return "User successfully deleted!.";
+    }
+
+    public UserDto userToDto(User user) {
+        return this.modelMapper.map(user, UserDto.class);
+    }
 }
