@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import javax.xml.crypto.Data;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -49,6 +51,33 @@ public class PostServiceImpl implements PostService {
         Post savedPost = postRepo.save(post);
 
         return this.postToDto(savedPost);
+    }
+
+    @Override
+    public List<PostDto> getAllPostsMethod() {
+        List<Post> posts = postRepo.findAll();
+        return posts.stream().map(this::postToDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public PostDto updatePostMethod(PostDto dto, Long postId) {
+        return null;
+    }
+
+    @Override
+    public PostDto getPostByIdMethod(Long Id) {
+
+        return null;
+    }
+
+    @Override
+    public List<PostDto> getPostByCategoryIdMethod(Long Id) {
+        return null;
+    }
+
+    @Override
+    public List<PostDto> getPostByUserIdMethod(Long Id) {
+        return null;
     }
 
 
