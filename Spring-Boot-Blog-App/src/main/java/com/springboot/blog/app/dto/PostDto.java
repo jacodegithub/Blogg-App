@@ -15,6 +15,7 @@ public class PostDto extends  BaseModelDto {
 
     private String title;
     private String description;
+    private String imageName;
     private UserDto user;
     private CategoryDto category;
 }

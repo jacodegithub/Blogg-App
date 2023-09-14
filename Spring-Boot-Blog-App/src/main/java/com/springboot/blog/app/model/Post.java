@@ -23,6 +23,8 @@ public class Post extends BaseModel {
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    private String imageName;
+
     @ManyToOne
     private User user;
 
