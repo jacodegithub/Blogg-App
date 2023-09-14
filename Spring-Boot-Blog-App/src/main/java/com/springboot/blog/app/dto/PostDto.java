@@ -18,4 +18,5 @@ public class PostDto extends  BaseModelDto {
     private String imageName;
     private UserDto user;
     private CategoryDto category;
+    private CommentDto comment;
 }

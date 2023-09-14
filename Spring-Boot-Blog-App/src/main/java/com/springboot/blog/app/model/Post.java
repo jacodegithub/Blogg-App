@@ -1,13 +1,13 @@
 package com.springboot.blog.app.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
+
 
 @Getter
 @Setter
@@ -30,4 +30,7 @@ public class Post extends BaseModel {
 
     @ManyToOne
     private Category category;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    private List<Comment> comment;
 }
