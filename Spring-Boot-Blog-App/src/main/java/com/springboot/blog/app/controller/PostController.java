@@ -51,7 +51,7 @@ public class PostController {
         return this.postService.getPostByIdMethod(postId);
     }
 
-    @PutMapping("/user/{userId}/category/{catId}/post/{Id}")
+    @PutMapping("/update/post/{Id}")
     public PostDto updatePost(@PathVariable("Id") Long postId,
                               @RequestBody PostDto postDto) {
 

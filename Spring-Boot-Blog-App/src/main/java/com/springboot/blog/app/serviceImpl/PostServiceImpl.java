@@ -62,11 +62,13 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostDto updatePostMethod(Long postId, PostDto dto) {
-        Category cat = catRepo.findById(dto.getCategory().getId()).orElseThrow(
-                () -> new ResourceNotFoundException("category", dto.getCategory().getId())
-        );
+
+        //FIRST FIND THE POST THEN FIND THE CATEGORY FROM RETRIEVED POST
         Post post = postRepo.findById(postId).orElseThrow(
                 () -> new ResourceNotFoundException("post", postId)
+        );
+        Category cat = catRepo.findById(post.getCategory().getId()).orElseThrow(
+                () -> new ResourceNotFoundException("category", dto.getCategory().getId())
         );
 
         post.setLastModifiedDate(new Date());
