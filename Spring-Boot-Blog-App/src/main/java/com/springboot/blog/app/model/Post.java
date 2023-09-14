@@ -18,7 +18,7 @@ import lombok.Setter;
 public class Post extends BaseModel {
 
     @Column(nullable = false)
-    private String name;
+    private String title;
 
     @Column(columnDefinition = "TEXT")
     private String description;

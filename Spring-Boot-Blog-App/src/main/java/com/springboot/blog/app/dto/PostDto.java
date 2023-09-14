@@ -13,8 +13,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class PostDto extends  BaseModelDto {
 
-    private String name;
+    private String title;
     private String description;
-    private User user;
-    private Category category;
+    private UserDto user;
+    private CategoryDto category;
 }

@@ -11,6 +11,7 @@ import com.springboot.blog.app.repository.UserRepository;
 import com.springboot.blog.app.service.PostService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.Banner;
 import org.springframework.stereotype.Service;
 
 import javax.xml.crypto.Data;
@@ -27,10 +28,11 @@ public class PostServiceImpl implements PostService {
     private ModelMapper modelMapper;
 
     @Autowired
-    public PostServiceImpl(PostRepository postRepo, UserRepository userRepo, CategoryRepository catRepo) {
+    public PostServiceImpl(PostRepository postRepo, UserRepository userRepo, CategoryRepository catRepo, ModelMapper modelMapper) {
         this.postRepo = postRepo;
         this.userRepo = userRepo;
         this.catRepo = catRepo;
+        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -49,7 +51,6 @@ public class PostServiceImpl implements PostService {
         post.setUser(user);
 
         Post savedPost = postRepo.save(post);
-
         return this.postToDto(savedPost);
     }
 
@@ -60,24 +61,47 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostDto updatePostMethod(PostDto dto, Long postId) {
-        return null;
+    public PostDto updatePostMethod(Long postId, PostDto dto) {
+        Category cat = catRepo.findById(dto.getCategory().getId()).orElseThrow(
+                () -> new ResourceNotFoundException("category", dto.getCategory().getId())
+        );
+        Post post = postRepo.findById(postId).orElseThrow(
+                () -> new ResourceNotFoundException("post", postId)
+        );
+
+        post.setLastModifiedDate(new Date());
+        post.setCategory(cat);
+        post.setTitle(dto.getTitle());
+        post.setDescription(dto.getDescription());
+
+        Post savedPost = postRepo.save(post);
+        return this.postToDto(savedPost);
     }
 
     @Override
     public PostDto getPostByIdMethod(Long Id) {
-
-        return null;
+        Post post = postRepo.findById(Id).orElseThrow(
+                () -> new ResourceNotFoundException("user", Id)
+        );
+        return this.postToDto(post);
     }
 
     @Override
     public List<PostDto> getPostByCategoryIdMethod(Long Id) {
-        return null;
+        Category cat = catRepo.findById(Id).orElseThrow(
+                () -> new ResourceNotFoundException("category", Id)
+        );
+        List<Post> posts = postRepo.findByCategory(cat);
+        return posts.stream().map(this::postToDto).collect(Collectors.toList());
     }
 
     @Override
     public List<PostDto> getPostByUserIdMethod(Long Id) {
-        return null;
+        User user = userRepo.findById(Id).orElseThrow(
+                () -> new ResourceNotFoundException("user", Id)
+        );
+        List<Post> posts = postRepo.findByUser(user);
+        return posts.stream().map(this::postToDto).collect(Collectors.toList());
     }
 
 

@@ -9,6 +9,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     public String resourceNotFoundException(ResourceNotFoundException ex) {
         String message = ex.getMessage();
-        return "error occurred";
+        return message;
     }
 }
