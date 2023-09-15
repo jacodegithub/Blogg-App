@@ -2,15 +2,19 @@ package com.springboot.blog.app.serviceImpl;
 
 import com.springboot.blog.app.dto.UserDto;
 import com.springboot.blog.app.exception.ResourceNotFoundException;
+import com.springboot.blog.app.model.Role;
 import com.springboot.blog.app.model.User;
+import com.springboot.blog.app.repository.RoleRepository;
 import com.springboot.blog.app.repository.UserRepository;
 import com.springboot.blog.app.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -18,11 +22,15 @@ public class UserServiceImpl implements UserService {
 
     private UserRepository userRepo;
     private ModelMapper modelMapper;
+    private PasswordEncoder passwordEncoder;
+    private RoleRepository roleRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepo, ModelMapper modelMapper) {
+    public UserServiceImpl(UserRepository userRepo, ModelMapper modelMapper, PasswordEncoder passwordEncoder, RoleRepository roleRepository) {
         this.userRepo = userRepo;
         this.modelMapper = modelMapper;
+        this.passwordEncoder = passwordEncoder;
+        this.roleRepository = roleRepository;
     }
 
     @Override
@@ -30,11 +38,16 @@ public class UserServiceImpl implements UserService {
         User user = new User();
 
         user.setId(userDto.getId());
-        user.setUserName(userDto.getUserName());
+        user.setUsername(userDto.getUsername());
         user.setEmailId(userDto.getEmailId());
-        user.setPassword(userDto.getPassword());
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setCreatedDate(new Date());
 
+        Role role = this.roleRepository.findByRole("ROLE_USER").get();
+        if(role == null) {
+            role = checkUserRoles();
+        }
+        user.setRoles(Set.of(role));
         User savedUser = userRepo.save(user);
 
         UserDto dto = this.userToDto(savedUser);
@@ -51,14 +64,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto updateUser(UserDto dto, Long userId) {
         User user = userRepo.findById(userId).orElseThrow(
-                () -> new ResourceNotFoundException(dto.getUserName(), userId)
+                () -> new ResourceNotFoundException(dto.getUsername(), userId)
         );
         if(user.getCreatedDate() != null) {
             user.setLastModifiedDate(new Date());
         }
 
         // NEVER TRY TO UPDATE PRIMARY KEY
-        user.setUserName(dto.getUserName());
+        user.setUsername(dto.getUsername());
         user.setEmailId(dto.getEmailId());
         user.setPassword(dto.getPassword());
 
@@ -73,6 +86,10 @@ public class UserServiceImpl implements UserService {
                 () -> new ResourceNotFoundException("user", id)
         );
 
+        User user1 = this.userRepo.findByUsername("waqhar hussain").orElseThrow(
+                () -> new ResourceNotFoundException("waqhar", 0l)
+        );
+        System.out.println("looking for name -> "+user1);
         return this.userToDto(user);
     }
 
@@ -86,5 +103,11 @@ public class UserServiceImpl implements UserService {
 
     public UserDto userToDto(User user) {
         return this.modelMapper.map(user, UserDto.class);
+    }
+
+    public Role checkUserRoles() {
+        Role role = new Role();
+        role.setRole("USER_ROLE");
+        return this.roleRepository.save(role);
     }
 }

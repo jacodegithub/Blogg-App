@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDto extends BaseModelDto {
-    private String userName;
+    private String username;
     private String emailId;
     private String password;
 }
