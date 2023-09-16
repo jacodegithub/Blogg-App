@@ -35,22 +35,24 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth ->
                         {
-                            auth.requestMatchers(HttpMethod.POST, "/blog/api/v1/**").hasAnyRole("ADMIN");
+                            auth.requestMatchers(HttpMethod.POST, "/blog/api/v1/register").permitAll();
+                            auth.requestMatchers(HttpMethod.POST, "/blog/api/v1/login").permitAll();
+//                            auth.requestMatchers(HttpMethod.GET, "/blog/api/v1/**").hasAnyRole("ADMIN");
                             auth.requestMatchers(HttpMethod.GET, "/blog/api/v1/**").hasAnyRole("USER", "ADMIN");
+                            auth.requestMatchers(HttpMethod.POST, "/blog/api/v1/**").hasAnyRole("ADMIN");
                             auth.requestMatchers(HttpMethod.DELETE, "/blog/api/v1/**").hasAnyRole("ADMIN");
                             auth.requestMatchers(HttpMethod.PUT, "/blog/api/v1/**").hasAnyRole("ADMIN");
-                            auth.requestMatchers(HttpMethod.POST, "/blog/api/v1/register").permitAll();
                             auth.anyRequest().authenticated();
                         })
                 .exceptionHandling(e -> e.authenticationEntryPoint(((request, response, authException) -> {
                     response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());
                 })))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
-                .httpBasic(Customizer.withDefaults());
         return http.build();
     }
+
 
 //    @Bean
 //    public UserDetailsService users() {

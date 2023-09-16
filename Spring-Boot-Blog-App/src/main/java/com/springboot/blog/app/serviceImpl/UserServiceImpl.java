@@ -66,9 +66,8 @@ public class UserServiceImpl implements UserService {
         User user = userRepo.findById(userId).orElseThrow(
                 () -> new ResourceNotFoundException(dto.getUsername(), userId)
         );
-        if(user.getCreatedDate() != null) {
-            user.setLastModifiedDate(new Date());
-        }
+
+        user.setLastModifiedDate(new Date());
 
         // NEVER TRY TO UPDATE PRIMARY KEY
         user.setUsername(dto.getUsername());
