@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,20 +18,20 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "users",
-    uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"emailId", "password"})
-    }
-)
+@Table(name = "users")
+    // uniqueConstraints = {
+    //     @UniqueConstraint(columnNames = {"emailId", "password"})
+    // }
+// )
 public class User extends BaseModel {
 
     @Column(nullable = false)
     private String username;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String emailId;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String password;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

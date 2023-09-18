@@ -5,6 +5,9 @@ import com.springboot.blog.app.dto.JWTAuthResponse;
 import com.springboot.blog.app.dto.UserDto;
 import com.springboot.blog.app.security.JwtTokenGenerator;
 import com.springboot.blog.app.service.UserService;
+
+import jakarta.validation.Valid;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -44,12 +47,12 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public UserDto userRegistration(@RequestBody UserDto userDto) {
+    public UserDto userRegistration(@Valid @RequestBody UserDto userDto) {
         return this.userService.creteUser(userDto);
     }
 
     @PostMapping("/login")
-    public JWTAuthResponse userLogin(@RequestBody JWTAuthRequest request) {
+    public JWTAuthResponse userLogin(@Valid @RequestBody JWTAuthRequest request) {
         Authentication authentication = authenticationManager.authenticate(
           new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
         );

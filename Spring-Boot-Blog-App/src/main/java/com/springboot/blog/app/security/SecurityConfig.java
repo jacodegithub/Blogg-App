@@ -108,7 +108,7 @@ public class SecurityConfig {
         corsConfiguration.addAllowedHeader("Authorization");
         corsConfiguration.addAllowedHeader("Content-Type");
         corsConfiguration.addAllowedHeader("Accept");
-        corsConfiguration.setAllowedMethods(List.of("null", "GET", "DELETE", "PUT", "OPTIONS"));
+        corsConfiguration.setAllowedMethods(List.of("POST", "GET", "DELETE", "PUT", "OPTIONS"));
         corsConfiguration.setMaxAge(3600L);
 
         source.registerCorsConfiguration("/**", corsConfiguration);
