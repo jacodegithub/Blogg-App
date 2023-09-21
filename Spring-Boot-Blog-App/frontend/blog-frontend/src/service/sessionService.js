@@ -1,6 +1,6 @@
 
 export const doLoggin = (data) => {
-    console.log('localstorage data', data)
+    // console.log('localstorage data', data)
     localStorage.setItem('data', JSON.stringify(data))
 }
 

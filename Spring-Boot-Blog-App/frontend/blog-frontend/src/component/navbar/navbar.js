@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
-import { NavLink as ReactLink, useNavigate } from 'react-router-dom';
-import {Collapse, DropdownItem, DropdownMenu, DropdownToggle, Nav, NavItem, NavLink, Navbar, NavbarBrand, NavbarText, NavbarToggler, UncontrolledDropdown} from 'reactstrap'
+import { NavLink as ReactLink } from 'react-router-dom';
+import {Collapse, DropdownItem, DropdownMenu, DropdownToggle, Nav, NavItem, NavLink, Navbar, NavbarBrand, NavbarToggler, UncontrolledDropdown} from 'reactstrap'
 import { getCurrentUserDetails } from '../../service/sessionService';
 
-function BlogNavbar(args) {
+function BlogNavbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggle = () => setIsOpen(!isOpen);
 
   const currentUser = getCurrentUserDetails();
-  console.log('user ->', currentUser)
+  const userId = currentUser.id;
+
 
   return (
     <div>
-        <Navbar color='dark' dark expand='md' fixed='' {...args}>
+        <Navbar color='dark' dark expand='md' fixed='' >
             <NavbarBrand href="/">blog'in</NavbarBrand>
             <NavbarToggler onClick={toggle} />
             <Collapse isOpen={isOpen} navbar>
@@ -22,7 +23,7 @@ function BlogNavbar(args) {
                 <NavLink className="pointer" tag={ReactLink} to={'/'}>Home</NavLink>
                 </NavItem>
                 <NavItem>
-                <NavLink className='pointer' tag={ReactLink} to={'/'}>
+                <NavLink className='pointer' tag={ReactLink} to={`/user-posts/${userId}`}>
                     My posts
                 </NavLink>
                 </NavItem>

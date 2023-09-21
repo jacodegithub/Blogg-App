@@ -94,7 +94,7 @@ public class PostController {
         return this.postService.updatePostMethod(Id, postDto);
     }
 
-    // REST API TO DOWNLOAD IMAGE
+    // REST API TO SERVE IMAGE / GET OR SHOW IMAGE ON PAGE
     @GetMapping(value = "/post/image/{imageName}", produces = MediaType.IMAGE_JPEG_VALUE)
     public void downloadImage(@PathVariable("imageName") String imageName, HttpServletResponse response) throws IOException {
         InputStream inputStream = this.fileService.getResource(path, imageName);
