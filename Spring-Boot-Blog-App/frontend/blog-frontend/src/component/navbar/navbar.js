@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink as ReactLink, useNavigate } from 'react-router-dom';
 import {Collapse, DropdownItem, DropdownMenu, DropdownToggle, Nav, NavItem, NavLink, Navbar, NavbarBrand, NavbarText, NavbarToggler, UncontrolledDropdown} from 'reactstrap'
+import { getCurrentUserDetails } from '../../service/sessionService';
 
 function BlogNavbar(args) {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggle = () => setIsOpen(!isOpen);
+
+  const currentUser = getCurrentUserDetails();
+  console.log('user ->', currentUser)
 
   return (
     <div>
@@ -15,11 +19,11 @@ function BlogNavbar(args) {
             <Collapse isOpen={isOpen} navbar>
             <Nav className="me-auto" navbar>
                 <NavItem>
-                <NavLink href="/">Home</NavLink>
+                <NavLink className="pointer" tag={ReactLink} to={'/'}>Home</NavLink>
                 </NavItem>
                 <NavItem>
-                <NavLink href="https://github.com/reactstrap/reactstrap">
-                    My Posts
+                <NavLink className='pointer' tag={ReactLink} to={'/'}>
+                    My posts
                 </NavLink>
                 </NavItem>
                 <UncontrolledDropdown nav inNavbar>
@@ -34,12 +38,14 @@ function BlogNavbar(args) {
                 </DropdownMenu>
                 </UncontrolledDropdown>
             </Nav>
-            <NavbarText className='mx-2'>
-                <Link to={`/login`}>Login</Link>
-            </NavbarText>
-            <NavbarText className='mx-2'>
-                <Link to={`/register`}>SignUp</Link>
-            </NavbarText>
+            <Nav className='auto' navbar>
+                <NavItem className='mx-2'>
+                    <NavLink className='pointer' tag={ReactLink} to={`/login`}>Login</NavLink>
+                </NavItem>
+                <NavItem className='mx-2'>
+                    <NavLink className='pointer' tag={ReactLink} to={`/register`}>SignUp</NavLink>
+                </NavItem>
+            </Nav>
             </Collapse>
         </Navbar>      
     </div>

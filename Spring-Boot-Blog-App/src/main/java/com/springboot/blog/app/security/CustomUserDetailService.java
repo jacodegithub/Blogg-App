@@ -12,10 +12,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+// import java.util.Collection;
+// import java.util.List;
+// import java.util.Set;
+// import java.util.stream.Collectors;
 
 @Service
 public class CustomUserDetailService implements UserDetailsService {
@@ -35,14 +35,17 @@ public class CustomUserDetailService implements UserDetailsService {
                 () -> new ResourceNotFoundException("user", 0l)
         );
 
-        return new org.springframework.security.core.userdetails.User(
-                user.getUsername(),
-                user.getPassword(),
-                mapRolesToAuthorities(user.getRoles())
-        );
+
+        return user;
+
+        // return new org.springframework.security.core.userdetails.User(
+        //         user.getUsername(),
+        //         user.getPassword(),
+        //         mapRolesToAuthorities(user.getRoles())
+        // );
     }
 
-    public Collection<GrantedAuthority> mapRolesToAuthorities(Set<Role> roles) {
-        return roles.stream().map(role -> new SimpleGrantedAuthority(role.getRole())).collect(Collectors.toList());
-    }
+    // public Collection<GrantedAuthority> mapRolesToAuthorities(Set<Role> roles) {
+    //     return roles.stream().map(role -> new SimpleGrantedAuthority(role.getRole())).collect(Collectors.toList());
+    // }
 }

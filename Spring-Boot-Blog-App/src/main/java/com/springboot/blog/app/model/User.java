@@ -1,19 +1,21 @@
 package com.springboot.blog.app.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,7 +25,7 @@ import lombok.Setter;
     //     @UniqueConstraint(columnNames = {"emailId", "password"})
     // }
 // )
-public class User extends BaseModel {
+public class User extends BaseModel implements UserInterface {
 
     @Column(nullable = false)
     private String username;
@@ -43,4 +45,63 @@ public class User extends BaseModel {
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "Id")
     )
     private Set<Role> roles;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<SimpleGrantedAuthority> authorities = this.roles.stream().map(role -> new SimpleGrantedAuthority(role.getRole())).collect(Collectors.toList());
+
+        return authorities;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    @Override
+    public Long getUserId() {
+        return this.getId();
+    }
+
+    @Override
+    public String getUsername() {
+        return this.username;
+    }
+
+    @Override
+    public String getPassword() {
+        return this.password;
+    }
+
+    @Override
+    public String getEmailId() {
+        return this.emailId;
+    }
+
+    @Override
+    public List<Post> getPost() {
+        return this.posts;
+    }
+
+    @Override
+    public Set<Role> getRole() {
+        return this.roles;
+    }
+
+    
 }

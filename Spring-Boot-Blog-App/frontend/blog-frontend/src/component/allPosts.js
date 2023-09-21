@@ -29,7 +29,7 @@ export const Posts = () => {
     <div>
         <Container>
             <Row>
-                <Col md={{size: 8, offset: 2}}>
+                <Col>
                     {
                         posts && posts?.map((post, index) => (
                             <EachPost key={index} post={post} />

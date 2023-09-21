@@ -1,5 +1,5 @@
 import React from 'react'
-import BlogNavbar from './navbar'
+import BlogNavbar from './navbar/navbar'
 
 export const Base = ({title = "welcome to the blogging app", children}) => {
   return (

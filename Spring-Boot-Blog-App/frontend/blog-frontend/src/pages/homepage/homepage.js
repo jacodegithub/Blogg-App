@@ -10,7 +10,7 @@ export const HomePage = () => {
     <Base>
       <Container>
         <Row>
-          <Col>
+          <Col md={{size: 8, offset: 2}}>
             <Posts />
           </Col>
         </Row>

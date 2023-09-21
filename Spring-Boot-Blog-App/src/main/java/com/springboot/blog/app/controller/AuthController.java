@@ -3,6 +3,7 @@ package com.springboot.blog.app.controller;
 import com.springboot.blog.app.dto.JWTAuthRequest;
 import com.springboot.blog.app.dto.JWTAuthResponse;
 import com.springboot.blog.app.dto.UserDto;
+import com.springboot.blog.app.exception.ApiError;
 import com.springboot.blog.app.security.JwtTokenGenerator;
 import com.springboot.blog.app.service.UserService;
 
@@ -11,9 +12,11 @@ import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -53,15 +56,52 @@ public class AuthController {
 
     @PostMapping("/login")
     public JWTAuthResponse userLogin(@Valid @RequestBody JWTAuthRequest request) {
-        Authentication authentication = authenticationManager.authenticate(
-          new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
-        );
-        UserDetails userDetails = this.userDetailsService.loadUserByUsername(request.getUsername());
+        Authentication authentication = null;
+        
+        /* 
+            FETCHING USER DATA FROM THE DATABASE USING 'UsernamePasswordAuthenticationToken' 
+            AND AUTHENTICATING WITH AuthenticationManager
+        */ 
+        try {
+            authentication = authenticationManager.authenticate(
+              new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
+            );
+        } catch (BadCredentialsException e) { // USING BadCredentialsException 
+            throw new BadCredentialsException("Invalid credentials!!");
+        }
+
+
+        /*
+         * 
+         * FETCHING USER DETAILS FROM THE DATABASE USING 'UserDetails' and 
+         * loadUserByName(String username)
+         * 
+         * Handling error with Custom Exception.
+         */
+        UserDetails userDetails = null;
+        
+        try {
+            userDetails = this.userDetailsService.loadUserByUsername(request.getUsername());
+        } catch (ApiError e) {
+            throw new ApiError("User not found!!");
+        }
+        
+        /*
+         * SECURING ALL DETIALS IN 'SecurityContextHolder'
+         */
         SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        /*
+         * GENERATION JWT TOKEN WITH authenticated 'user'
+         */
         String token = jwtTokenGenerator.generateToken(authentication);
+
+        /*
+         * SERVING BACK THE DETAILS USING CUSTOM DTO RESPONSE
+         */
         JWTAuthResponse response = new JWTAuthResponse();
         response.setToken(token);
-        response.setUserDto(this.modelMapper.map(userDetails, UserDto.class));
+        response.setUserDto((UserDto)this.modelMapper.map(userDetails, UserDto.class));
         return response;
     }
 }

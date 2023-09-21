@@ -44,7 +44,7 @@ public class SecurityConfig {
                         {
                             auth.requestMatchers(HttpMethod.POST, "/blog/api/v1/register").permitAll();
                             auth.requestMatchers(HttpMethod.POST, "/blog/api/v1/login").permitAll();
-//                            auth.requestMatchers(HttpMethod.GET, "/blog/api/v1/**").hasAnyRole("ADMIN");
+                           auth.requestMatchers(HttpMethod.GET, "/blog/api/v1/posts").permitAll();
                             auth.requestMatchers(HttpMethod.GET, "/blog/api/v1/**").hasAnyRole("USER", "ADMIN");
                             auth.requestMatchers(HttpMethod.POST, "/blog/api/v1/**").hasAnyRole("ADMIN");
                             auth.requestMatchers(HttpMethod.DELETE, "/blog/api/v1/**").hasAnyRole("ADMIN");
