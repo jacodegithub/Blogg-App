@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { NavLink as ReactLink } from 'react-router-dom';
 import {Collapse, DropdownItem, DropdownMenu, DropdownToggle, Nav, NavItem, NavLink, Navbar, NavbarBrand, NavbarToggler, UncontrolledDropdown} from 'reactstrap'
-import { getCurrentUserDetails } from '../../service/sessionService';
+import { getCurrentUserDetails, isLoggedIn } from '../../service/sessionService';
 
 function BlogNavbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,6 +11,10 @@ function BlogNavbar() {
   const currentUser = getCurrentUserDetails();
   const userId = currentUser.id;
 
+  let login = false;
+  if(isLoggedIn()) {
+    login = true;
+  }
 
   return (
     <div>
@@ -24,7 +28,11 @@ function BlogNavbar() {
                 </NavItem>
                 <NavItem>
                 <NavLink className='pointer' tag={ReactLink} to={`/user-posts/${userId}`}>
-                    My posts
+                    { 
+                        login && (
+                            <span>My Posts</span>
+                        )
+                    }
                 </NavLink>
                 </NavItem>
                 <UncontrolledDropdown nav inNavbar>
@@ -41,10 +49,19 @@ function BlogNavbar() {
             </Nav>
             <Nav className='auto' navbar>
                 <NavItem className='mx-2'>
-                    <NavLink className='pointer' tag={ReactLink} to={`/login`}>Login</NavLink>
+                    {
+                        !login && <NavLink className='pointer' tag={ReactLink} to={`/login`}>Login</NavLink>
+                    }
                 </NavItem>
                 <NavItem className='mx-2'>
-                    <NavLink className='pointer' tag={ReactLink} to={`/register`}>SignUp</NavLink>
+                    {
+                        !login && <NavLink className='pointer' tag={ReactLink} to={`/register`}>SignUp</NavLink>
+                    }
+                </NavItem>
+                <NavItem className='mx-2'>
+                    {
+                        login && <NavLink className='pointer' tag={ReactLink} to={`/register`}>Logout</NavLink>
+                    }
                 </NavItem>
             </Nav>
             </Collapse>
